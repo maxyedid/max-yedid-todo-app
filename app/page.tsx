@@ -10,7 +10,7 @@ export default function Home() {
     { id: crypto.randomUUID(), text: "Complete interview with Tabs", completed: true },
     { id: crypto.randomUUID(), text: "Build a to-do list app using all the tools at your disposal", completed: true },
     { id: crypto.randomUUID(), text: "Advance to the next round at Tabs", completed: false },
-    {id: crypto.randomUUID(), text: "Crank out more code", completed: false },
+    { id: crypto.randomUUID(), text: "Crank out more code", completed: false },
   ];
 
   const [items, setItems] = useState<TodoItem[]>(initialItems);

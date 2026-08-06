@@ -19,10 +19,8 @@ export class GithubOidcStack extends cdk.Stack {
     const deployRole = new iam.Role(this, "GithubActionsDeployRole", {
       roleName: "github-actions-todo-app-deploy",
       assumedBy: new iam.WebIdentityPrincipal(provider.openIdConnectProviderArn, {
-        StringEquals: {
-          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
-        },
         StringLike: {
+          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
           "token.actions.githubusercontent.com:sub": `repo:${GITHUB_REPO}:ref:refs/heads/main`,
         },
       }),

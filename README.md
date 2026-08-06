@@ -34,9 +34,19 @@ stored in the repo. `infra/lib/github-oidc-stack.ts` provisions an IAM role
 triggered from a push to `main` in this exact repo, and that role can only
 assume the CDK bootstrap roles (not S3/CloudFront/IAM directly).
 
-1. Push this repo to GitHub (must match the repo name hardcoded in
+1. Push this repo to GitHub (must match the repo hardcoded in
    `github-oidc-stack.ts`'s `GITHUB_REPO` constant, or the trust policy
    won't match and the workflow's `sts:AssumeRoleWithWebIdentity` will fail).
+
+   Note the constant is `owner@ownerId/repo@repoId`, not just `owner/repo`.
+   Repos created after 2026-07-15 default to GitHub's "immutable subject
+   claims," where the OIDC token's `sub` claim embeds the numeric owner/repo
+   IDs (e.g. `repo:maxyedid@26383888/max-yedid-todo-app@1324552127:ref:...`)
+   instead of the plain names — an older repo would just use `owner/repo`
+   here. Get the IDs with:
+   ```bash
+   gh api repos/<owner>/<repo> --jq '"\(.owner.login)@\(.owner.id)/\(.name)@\(.id)"'
+   ```
 2. Deploy `GithubOidcStack` if you haven't (`npx cdk deploy GithubOidcStack`,
    from `infra/`) — it must exist before the workflow can run.
 3. No repository secrets needed. From then on, pushes to `main` will build
@@ -49,6 +59,15 @@ assume the CDK bootstrap roles (not S3/CloudFront/IAM directly).
 ```bash
 npm install
 npm run dev
+```
+
+To preview the actual static export locally (closer to what CloudFront
+serves than `next dev`):
+
+```bash
+npm run build
+npm start          # serves out/ via `serve`, since `next start` doesn't
+                    # work with output: "export"
 ```
 
 ## Deploying manually

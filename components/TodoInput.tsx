@@ -11,9 +11,7 @@ export default function TodoInput({ onAdd }: TodoInputProps) {
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    const trimmed = text.trim();
-    if (!trimmed) return;
-    onAdd(trimmed);
+    onAdd(text);
     setText("");
   }
 
@@ -24,9 +22,9 @@ export default function TodoInput({ onAdd }: TodoInputProps) {
         className="todo-input-field"
         placeholder="Add a new task"
         value={text}
-        onChange={(event) => setText(event.target.value)}
+        onChange={(event) => setText(event.target.value.trim())}
       />
-      <button type="submit" className="todo-input-button" disabled={!text.trim()}>
+      <button type="submit" className="todo-input-button" disabled={!text}>
         Add
       </button>
     </form>

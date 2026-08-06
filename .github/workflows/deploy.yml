@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
 
@@ -25,22 +26,11 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: arn:aws:iam::748503131746:role/github-actions-todo-app-deploy
+          aws-region: us-east-1
 
       - name: Deploy infra (CDK)
         working-directory: infra
         run: |
           npm install
           npx cdk deploy --all --require-approval never
-
-      - name: Sync static site to S3
-        run: |
-          aws s3 sync out s3://${{ secrets.S3_BUCKET_NAME }} --delete
-
-      - name: Invalidate CloudFront cache
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/*"

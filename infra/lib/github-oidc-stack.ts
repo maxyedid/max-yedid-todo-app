@@ -2,7 +2,7 @@ import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as iam from "aws-cdk-lib/aws-iam";
 
-const GITHUB_REPO = "maxyedid/max-yedid-todo-app";
+const GITHUB_REPO = "maxyedid@26383888/max-yedid-todo-app@1324552127";
 const CDK_BOOTSTRAP_QUALIFIER = "hnb659fds";
 
 export class GithubOidcStack extends cdk.Stack {
